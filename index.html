@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>DO IT NOW</title>
+    <link
+      rel="stylesheet"
+      href="style.css" />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet" />
+    <script
+      src="https://kit.fontawesome.com/efb6daf726.js"
+      crossorigin="anonymous"></script>
+    <script
+      defer
+      src="script.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="navbar">
+          <div class="navbarText">
+            <h1 class="tooDoo">TOO DOO</h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="main">
+      <div class="container">
+        <div class="tasksMain">
+          <div class="tasksMainHeader">
+            <div class="tasksMainHeaderText">
+              <h4>TO DO</h4>
+            </div>
+            <div class="taskSearchBar">
+              <input
+                class="taskSearchBarInput"
+                for="search"
+                type="text"
+                name="search"
+                placeholder="Search for task"
+                autocomplete="off" />
+            </div>
+            <div class="taskSearch">
+              <button class="searchBtn">
+                <i class="fas fa-search searchIcon"></i>
+              </button>
+            </div>
+          </div>
+          <div class="addTask">
+            <div class="addTaskInput">
+              <input
+                class="addTaskInputBar"
+                for="addTask"
+                type="text"
+                name="addTask"
+                placeholder="Add Task"
+                autocomplete="off" />
+            </div>
+            <div class="addTaskBtnMain">
+              <button class="addTaskBtn"><i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="allTasks">
+            <template class="taskTemplate">
+              <div class="task">
+                <div class="taskNameAndCheckbox">
+                  <div class="taskMarkAsDone">
+                    <div class="checkbox-wrapper-42">
+                      <input
+                        class="taskDoneInput"
+                        id=""
+                        type="checkbox" />
+                      <label
+                        class="cbx"
+                        for=""></label>
+                    </div>
+                  </div>
+                  <p class="taskName">Task 1</p>
+                </div>
+                <div class="taskEditAndDelete">
+                  <div class="taskEdit">
+                    <button class="taskEditBtn">
+                      <i class="fa-solid fa-pen editPen"></i>
+                    </button>
+                  </div>
+                  <div class="taskDelete">
+                    <button class="taskDeleteBtn">
+                      <i class="fa-regular fa-trash-can trashCan"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="taskEditContent">
+                  <div class="taskEditMain">
+                    <div class="taskEditInput">
+                      <input
+                        class="taskEditInputBar"
+                        type="text"
+                        name="taskEdit"
+                        placeholder="Edit task"
+                        autocomplete="off" />
+                    </div>
+                    <div class="taskEditSaveAndCancel">
+                      <button class="taskEditSaveBtn">
+                        <i class="fa-solid fa-check"></i>
+                      </button>
+                      <button class="taskEditCancelBtn">
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer"></footer>
+  </body>
+</html>
