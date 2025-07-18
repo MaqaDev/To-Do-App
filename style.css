@@ -63,6 +63,9 @@ input[type="text"]:focus {
   .navbarText {
     font-size: 16px !important;
   }
+  .deleteAllConfirmation {
+    width: 300px !important;
+  }
 }
 
 .navbar {
@@ -185,7 +188,7 @@ input[type="text"]:focus {
   width: 100%;
   box-sizing: border-box;
   border-radius: 8px;
-  padding: 8px;
+  padding: 12px 24px;
   padding-left: 20px;
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" fill="%23000"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6 .1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>'),
     auto;
@@ -236,6 +239,7 @@ input[type="text"]:focus {
 }
 
 .addTaskInput {
+  position: relative;
   box-sizing: border-box;
   width: 100%;
   box-sizing: border-box;
@@ -249,6 +253,31 @@ input[type="text"]:focus {
   border-radius: 8px;
   background: inherit;
   border: 2px solid #99a7ff;
+}
+
+.emptyTask {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  animation: emptyTask 4s ease-in-out forwards;
+  display: none;
+  text-wrap: nowrap;
+}
+
+@keyframes emptyTask {
+  0% {
+    opacity: 0;
+    display: block;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
 }
 
 .addTaskBtnMain {
@@ -443,7 +472,83 @@ input[type="text"]:focus {
   font-family: inherit;
   font-size: 15px;
   color: red;
-  background-color: rgb(153, 167, 255, 0.5);
+  background-color: rgb(153, 167, 255, 0.3);
+}
+
+.textOppacity {
+  animation: textOppacity 4s ease-in-out;
+}
+
+.textOppacity2 {
+  animation: textOppacity2 2s ease-in-out;
+}
+
+@keyframes textOppacity {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes textOppacity2 {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.deleteAllConfirmation {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  width: 300px;
+  display: none;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  text-align: center;
+  border-radius: 8px !important;
+  border: none;
+  background-color: #111185;
+}
+
+.deleteAllText {
+  padding: 30px;
+  padding-top: 64px !important;
+  font-family: inherit;
+  font-size: 22px;
+  color: red;
+}
+
+.deleteAllConfirmAndCancel {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+  padding-bottom: 32px;
+}
+
+.deleteAllConfirm,
+.deleteAllCancel {
+  padding: 8px 16px;
+  font-family: inherit;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+}
+
+.deleteAllConfirm {
+  background-color: #ffd8d8;
+  color: red;
 }
 
 /* checkbox added css */

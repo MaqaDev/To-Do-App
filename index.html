@@ -27,16 +27,7 @@
       src="script.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
   </head>
-  <body>
-    <header class="header">
-      <div class="container">
-        <div class="navbar">
-          <div class="navbarText">
-            <h1 class="tooDoo">TOO DOO</h1>
-          </div>
-        </div>
-      </div>
-    </header>
+  <body id="body">
     <main class="main">
       <div class="container">
         <div class="tasksMain">
@@ -61,6 +52,7 @@
           </div>
           <div class="addTask">
             <div class="addTaskInput">
+              <label class="emptyTask">You cant add empty task!</label>
               <input
                 class="addTaskInputBar"
                 for="addTask"
@@ -73,57 +65,66 @@
               <button class="addTaskBtn"><i class="fa fa-plus"></i></button>
             </div>
           </div>
-          <div class="allTasks">
-            <template class="taskTemplate">
-              <div class="task">
-                <div class="taskNameAndCheckbox">
-                  <div class="taskMarkAsDone">
-                    <div class="checkbox-wrapper-42">
-                      <input
-                        class="taskDoneInput"
-                        id=""
-                        type="checkbox" />
-                      <label
-                        class="cbx"
-                        for=""></label>
-                    </div>
-                  </div>
-                  <p class="taskName">Task 1</p>
-                </div>
-                <div class="taskEditAndDelete">
-                  <div class="taskEdit">
-                    <button class="taskEditBtn">
-                      <i class="fa-solid fa-pen editPen"></i>
-                    </button>
-                  </div>
-                  <div class="taskDelete">
-                    <button class="taskDeleteBtn">
-                      <i class="fa-regular fa-trash-can trashCan"></i>
-                    </button>
+          <template class="taskTemplate">
+            <div class="task">
+              <div class="taskNameAndCheckbox">
+                <div class="taskMarkAsDone">
+                  <div class="checkbox-wrapper-42">
+                    <input
+                      class="taskDoneInput"
+                      id=""
+                      type="checkbox" />
+                    <label
+                      class="cbx"
+                      for=""></label>
                   </div>
                 </div>
-                <div class="taskEditContent">
-                  <div class="taskEditMain">
-                    <div class="taskEditInput">
-                      <input
-                        class="taskEditInputBar"
-                        type="text"
-                        name="taskEdit"
-                        placeholder="Edit task"
-                        autocomplete="off" />
-                    </div>
-                    <div class="taskEditSaveAndCancel">
-                      <button class="taskEditSaveBtn">
-                        <i class="fa-solid fa-check"></i>
-                      </button>
-                      <button class="taskEditCancelBtn">
-                        <i class="fa-solid fa-xmark"></i>
-                      </button>
-                    </div>
+                <p class="taskName">Task 1</p>
+              </div>
+              <div class="taskEditAndDelete">
+                <div class="taskEdit">
+                  <button class="taskEditBtn">
+                    <i class="fa-solid fa-pen editPen"></i>
+                  </button>
+                </div>
+                <div class="taskDelete">
+                  <button class="taskDeleteBtn">
+                    <i class="fa-regular fa-trash-can trashCan"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="taskEditContent">
+                <div class="taskEditMain">
+                  <div class="taskEditInput">
+                    <input
+                      class="taskEditInputBar"
+                      type="text"
+                      name="taskEdit"
+                      placeholder="Edit task"
+                      autocomplete="off" />
+                  </div>
+                  <div class="taskEditSaveAndCancel">
+                    <button class="taskEditSaveBtn">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button class="taskEditCancelBtn">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-            </template>
+            </div>
+          </template>
+          <div class="allTasks"></div>
+          <div class="deleteAllMain">
+            <button class="deleteAllBtn">Delete All</button>
+            <div class="deleteAllConfirmation">
+              <p class="deleteAllText">Delete All?</p>
+              <div class="deleteAllConfirmAndCancel">
+                <button class="deleteAllCancel">Cancel</button>
+                <button class="deleteAllConfirm">Confirm</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

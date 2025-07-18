@@ -33,9 +33,8 @@ function checkTaskStatus(status, taskName) {
 function renderTasks() {
   const savedTasksStr = localStorage.getItem("tasks");
   const savedTasks = JSON.parse(savedTasksStr);
-  taskList = savedTasks;
   if (!savedTasksStr || savedTasks.length == 0) return;
-
+  taskList = savedTasks;
   const allTasks = document.querySelector(".allTasks");
   savedTasks.forEach((taskdata) => {
     const taskTemplate = document
@@ -56,6 +55,31 @@ function renderTasks() {
 }
 renderTasks();
 
+// Serch Button Click Animation
+const body = document.getElementById("body");
+const searchIcon = document.querySelector(".searchIcon");
+const taskSearchBar = document.querySelector(".taskSearchBar");
+const taskMainHeaderText = document.querySelector(".tasksMainHeaderText");
+
+searchIcon.addEventListener("click", () => {
+  body.removeEventListener("click", sikdir);
+  console.log("sik");
+  taskMainHeaderText.style.display = "none";
+  searchIcon.style.display = "none";
+  taskSearchBar.classList.add("taskSearchBarAnimation");
+  setTimeout(() => {
+    body.addEventListener("click", sikdir);
+  }, 100);
+});
+
+function sikdir(event) {
+  if (taskSearchBar.classList.contains("taskSearchBarAnimation")) {
+    console.log(event.target);
+    taskMainHeaderText.style.display = "block";
+    searchIcon.style.display = "block";
+    taskSearchBar.classList.remove("taskSearchBarAnimation");
+  }
+}
 // SEARCH TASK
 const taskSearchBarInput = document.querySelector(".taskSearchBarInput");
 const addTaskBtn = document.querySelector(".addTaskBtn");
@@ -76,33 +100,44 @@ taskSearchBarInput.addEventListener("input", searchTask);
 // ADD TASK
 const addTaskInputBar = document.querySelector(".addTaskInputBar");
 function addTask() {
-  const savedTasksStr = localStorage.getItem("tasks");
-  const savedTasks = JSON.parse(savedTasksStr);
-  if (!savedTasksStr || savedTasks.length == 0) {
-    taskId = 0;
+  if (addTaskInputBar.value.trim() == "") {
+    const emptyTask = document.querySelector(".emptyTask");
+    console.log(emptyTask);
+    emptyTask.style.display = "block";
+    setTimeout(() => {
+      emptyTask.style.display = "none";
+    }, 4000);
   } else {
-    const lastId = savedTasks[savedTasks.length - 1].id;
-    taskId = lastId + 1;
+    const savedTasksStr = localStorage.getItem("tasks");
+    const savedTasks = JSON.parse(savedTasksStr);
+    if (!savedTasksStr || savedTasks.length == 0) {
+      taskId = 0;
+    } else {
+      const lastId = savedTasks[savedTasks.length - 1].id;
+      taskId = lastId + 1;
+    }
+    const allTasks = document.querySelector(".allTasks");
+    const taskTemplate = document
+      .querySelector(".taskTemplate")
+      .cloneNode(true);
+    const task = taskTemplate.content.querySelector(".task");
+    allTasks.append(task);
+    task.querySelector(".taskName").textContent = addTaskInputBar.value;
+    const taskName = addTaskInputBar.value;
+    task.dataset.id = taskId;
+    const taskObj = {
+      id: taskId,
+      taskName: taskName,
+      checkStatus: false,
+    };
+    const taskDoneInput = task.querySelector(".taskDoneInput");
+    const taskDoneLabel = task.querySelector(".cbx");
+    taskDoneInput.id = taskId;
+    taskDoneLabel.htmlFor = taskId;
+    taskList.push(taskObj);
+    addTaskInputBar.value = "";
+    saveToLocal();
   }
-  const allTasks = document.querySelector(".allTasks");
-  const taskTemplate = document.querySelector(".taskTemplate").cloneNode(true);
-  const task = taskTemplate.content.querySelector(".task");
-  allTasks.append(task);
-  task.querySelector(".taskName").textContent = addTaskInputBar.value;
-  const taskName = addTaskInputBar.value;
-  task.dataset.id = taskId;
-  const taskObj = {
-    id: taskId,
-    taskName: taskName,
-    checkStatus: false,
-  };
-  const taskDoneInput = task.querySelector(".taskDoneInput");
-  const taskDoneLabel = task.querySelector(".cbx");
-  taskDoneInput.id = taskId;
-  taskDoneLabel.htmlFor = taskId;
-  taskList.push(taskObj);
-  addTaskInputBar.value = "";
-  saveToLocal();
 }
 addTaskInputBar.value = "";
 addTaskBtn.addEventListener("click", addTask);
@@ -183,6 +218,7 @@ allTasks.addEventListener("keydown", (event) => {
   }
 });
 
+// task CHECKBOX event listener
 allTasks.addEventListener("click", (event) => {
   if (event.target.classList.contains("taskDoneInput")) {
     const task = event.target.closest(".task");
@@ -207,4 +243,35 @@ allTasks.addEventListener("click", (event) => {
   }
 });
 
+// Delete All event listener
+const deleteAllBtn = document.querySelector(".deleteAllBtn");
+const deleteAllConfirmation = document.querySelector(".deleteAllConfirmation");
+deleteAllBtn.addEventListener("click", () => {
+  if (allTasks.innerHTML != "") {
+    deleteAllConfirmation.style.display = "block";
+  } else {
+    deleteAllBtn.innerHTML = "You need to add task first !";
+    deleteAllBtn.classList.add("textOppacity");
+    deleteAllBtn.classList.remove("textOppacity2");
+    setTimeout(() => {
+      deleteAllBtn.innerHTML = "Delete All";
+      deleteAllBtn.classList.remove("textOppacity");
+      deleteAllBtn.classList.add("textOppacity2");
+    }, 2000);
+  }
+});
+
+// Delete All CONFIRM
+const deleteAllConfirm = document.querySelector(".deleteAllConfirm");
+deleteAllConfirm.addEventListener("click", () => {
+  allTasks.innerHTML = "";
+  localStorage.clear();
+  deleteAllConfirmation.style.display = "none";
+});
+
+// Delete All Cancel
+const deleteAllCancel = document.querySelector(".deleteAllCancel");
+deleteAllCancel.addEventListener("click", () => {
+  deleteAllConfirmation.style.display = "none";
+});
 // localStorage.clear();
