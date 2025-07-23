@@ -12,8 +12,19 @@ const getAllTask = async (req, res) => {
   }
 };
 
-// const addTask = async (req, res) => {
+const addTask = async (req, res) => {
+  try {
+    const { taskId, taskName, Completed } = req.body;
+    task.create({
+      taskId,
+      taskName,
+      Completed,
+    });
+    res.status(201).json(task);
+    console.log("task added db");
+  } catch (error) {
+    console.log("Error while add task to db backend :", error);
+  }
+};
 
-// };
-
-module.exports = getAllTask;
+module.exports = { getAllTask, addTask };

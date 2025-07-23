@@ -60,19 +60,17 @@ const body = document.getElementById("body");
 const searchIcon = document.querySelector(".searchIcon");
 const taskSearchBar = document.querySelector(".taskSearchBar");
 const taskMainHeaderText = document.querySelector(".tasksMainHeaderText");
-
 searchIcon.addEventListener("click", () => {
-  body.removeEventListener("click", sikdir);
-  console.log("sik");
+  body.removeEventListener("click", searchRequire);
   taskMainHeaderText.style.display = "none";
   searchIcon.style.display = "none";
   taskSearchBar.classList.add("taskSearchBarAnimation");
   setTimeout(() => {
-    body.addEventListener("click", sikdir);
+    body.addEventListener("click", searchRequire);
   }, 100);
 });
 
-function sikdir(event) {
+function searchRequire(event) {
   if (taskSearchBar.classList.contains("taskSearchBarAnimation")) {
     console.log(event.target);
     taskMainHeaderText.style.display = "block";
@@ -82,7 +80,6 @@ function sikdir(event) {
 }
 // SEARCH TASK
 const taskSearchBarInput = document.querySelector(".taskSearchBarInput");
-const addTaskBtn = document.querySelector(".addTaskBtn");
 function searchTask() {
   const searchKey = taskSearchBarInput.value.toLowerCase();
   const tasks = document.querySelectorAll(".task");
@@ -98,48 +95,47 @@ function searchTask() {
 taskSearchBarInput.addEventListener("input", searchTask);
 
 // ADD TASK
+const addTaskBtn = document.querySelector(".addTaskBtn");
 const addTaskInputBar = document.querySelector(".addTaskInputBar");
-function addTask() {
-  if (addTaskInputBar.value.trim() == "") {
-    const emptyTask = document.querySelector(".emptyTask");
-    console.log(emptyTask);
-    emptyTask.style.display = "block";
-    setTimeout(() => {
-      emptyTask.style.display = "none";
-    }, 4000);
-  } else {
-    const savedTasksStr = localStorage.getItem("tasks");
-    const savedTasks = JSON.parse(savedTasksStr);
-    if (!savedTasksStr || savedTasks.length == 0) {
-      taskId = 0;
+const addTask = async function (event) {
+  event.preventDefault();
+  try {
+    if (addTaskInputBar.value.trim() == "") {
+      const emptyTask = document.querySelector(".emptyTask");
+      emptyTask.style.display = "block";
+      setTimeout(() => {
+        emptyTask.style.display = "none";
+      }, 4000);
     } else {
-      const lastId = savedTasks[savedTasks.length - 1].id;
-      taskId = lastId + 1;
+      const allTasks = document.querySelector(".allTasks");
+      const taskTemplate = document
+        .querySelector(".taskTemplate")
+        .cloneNode(true);
+      const task = taskTemplate.content.querySelector(".task");
+      allTasks.append(task);
+      task.querySelector(".taskName").textContent = addTaskInputBar.value;
+      const taskName = addTaskInputBar.value;
+      const taskId = 103;
+      task.dataset.id = taskId;
+      const taskObj = {
+        taskId: taskId,
+        taskName: taskName,
+        Completed: false,
+      };
+      const response = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(taskObj),
+      });
+      if (response.ok) {
+        console.log("Task Added");
+        addTaskInputBar.value = "";
+      }
     }
-    const allTasks = document.querySelector(".allTasks");
-    const taskTemplate = document
-      .querySelector(".taskTemplate")
-      .cloneNode(true);
-    const task = taskTemplate.content.querySelector(".task");
-    allTasks.append(task);
-    task.querySelector(".taskName").textContent = addTaskInputBar.value;
-    const taskName = addTaskInputBar.value;
-    task.dataset.id = taskId;
-    const taskObj = {
-      id: taskId,
-      taskName: taskName,
-      checkStatus: false,
-    };
-    const taskDoneInput = task.querySelector(".taskDoneInput");
-    const taskDoneLabel = task.querySelector(".cbx");
-    taskDoneInput.id = taskId;
-    taskDoneLabel.htmlFor = taskId;
-    taskList.push(taskObj);
-    addTaskInputBar.value = "";
-    saveToLocal();
+  } catch (error) {
+    console.log(error);
   }
-}
-addTaskInputBar.value = "";
+};
 addTaskBtn.addEventListener("click", addTask);
 addTaskInputBar.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {

@@ -6,7 +6,8 @@ const controllerPath = path.join(
   "controllers",
   "taskController"
 );
-const getAllTask = require(controllerPath);
+const { getAllTask, addTask } = require(controllerPath);
 const router = express.Router();
-router.get("/", getAllTask);
+router.get("/tasks", getAllTask);
+router.post("/tasks", addTask);
 module.exports = router;

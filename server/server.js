@@ -24,9 +24,9 @@ async function DbConnect() {
 
 DbConnect();
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "..")));
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "public", "index.html"));
 });
-app.use("/tasks", routes);
-app.use("/", routes);
+app.use("/api", routes);
