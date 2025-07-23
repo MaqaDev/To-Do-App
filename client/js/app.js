@@ -8,17 +8,6 @@ function saveToLocal() {
   localStorage.setItem("tasks", tasks);
 }
 
-// find task from save
-function findTaskFromSave(task) {
-  const taskId = task.dataset.id;
-  let neededElement = taskList.find((taskObj) => {
-    if (taskObj.id == taskId) {
-      return taskObj;
-    }
-  });
-  return neededElement;
-}
-
 // task Done changes
 function checkTaskStatus(status, taskName) {
   if (status) {
@@ -120,7 +109,7 @@ const addTask = async function (event) {
       allTasks.append(task);
       task.querySelector(".taskName").textContent = addTaskInputBar.value;
       const taskName = addTaskInputBar.value;
-      const taskId = 103;
+      const taskId = 201;
       task.dataset.id = taskId;
       const taskObj = {
         taskId: taskId,
@@ -148,17 +137,23 @@ addTaskInputBar.addEventListener("keydown", (event) => {
   }
 });
 
-// task REMOVE event listener
-allTasks.addEventListener("click", (event) => {
+// task delete event listener
+allTasks.addEventListener("click", deleteTask);
+async function deleteTask(event) {
+  event.preventDefault();
   if (event.target.classList.contains("trashCan")) {
     const task = event.target.closest(".task");
-    const removeElement = findTaskFromSave(task);
-    let index = taskList.indexOf(removeElement);
-    taskList.splice(index, 1);
-    saveToLocal();
+    const id = task.dataset.id;
+    const response = await fetch(`/api/tasks/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
     task.remove();
+    if (!response.ok) {
+      console.log(response.status);
+    }
   }
-});
+}
 
 // Task EDIT event listener
 allTasks.addEventListener("click", (event) => {
@@ -175,7 +170,6 @@ allTasks.addEventListener("click", (event) => {
 
 // task edit CONFIRM event listener
 allTasks.addEventListener("click", editTaskConfirm);
-
 async function editTaskConfirm(event) {
   event.preventDefault();
   try {
@@ -230,21 +224,33 @@ allTasks.addEventListener("keydown", (event) => {
 });
 
 // task CHECKBOX event listener
-allTasks.addEventListener("click", (event) => {
+allTasks.addEventListener("click", async (event) => {
   if (event.target.classList.contains("taskDoneInput")) {
     const task = event.target.closest(".task");
     const taskName = task.querySelector(".taskName");
     const checkBox = task.querySelector(".taskDoneInput");
     const checkIcon = task.querySelector(".cbx");
     const editPen = task.querySelector(".editPen");
-    // const status = findTaskFromSave(task).checkStatus
+    const checkStatus = false;
+    resObj = {
+      Completed: checkStatus,
+    };
+    const request = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(resObj),
+    };
     if (checkBox.checked) {
       findTaskFromSave(task).checkStatus = true;
+      checkStatus = true;
+      const id = task.dataset.id;
+      await fetch(`/api/tasks/${id}`, request);
       taskName.classList.add("taskDoneLine");
       editPen.classList.add("editPenAnimation");
       checkIcon.classList.add("taskDoneAnimation");
     } else {
-      findTaskFromSave(task).checkStatus = false;
+      checkStatus = false;
+      await fetch(`/api/tasks/${id}`, request);
       taskName.style.textDecoration = "";
       taskName.classList.remove("taskDoneLine");
       editPen.classList.remove("editPenAnimation");
@@ -274,11 +280,20 @@ deleteAllBtn.addEventListener("click", () => {
 
 // Delete All CONFIRM
 const deleteAllConfirm = document.querySelector(".deleteAllConfirm");
-deleteAllConfirm.addEventListener("click", () => {
+deleteAllConfirm.addEventListener("click", deleteAll);
+
+async function deleteAll(event) {
+  event.preventDefault();
+  const response = await fetch(`/api/tasks`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
   allTasks.innerHTML = "";
-  localStorage.clear();
   deleteAllConfirmation.style.display = "none";
-});
+  if (!response.ok) {
+    console.log(response.status);
+  }
+}
 
 // Delete All Cancel
 const deleteAllCancel = document.querySelector(".deleteAllCancel");

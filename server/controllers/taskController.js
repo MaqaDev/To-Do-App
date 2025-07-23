@@ -15,7 +15,7 @@ const getAllTask = async (req, res) => {
 const addTask = async (req, res) => {
   try {
     const { taskId, taskName, Completed } = req.body;
-    task.create({
+    await task.create({
       taskId,
       taskName,
       Completed,
@@ -42,4 +42,20 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = { getAllTask, addTask, updateTask };
+const deleteTask = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const response = await task.deleteOne({ taskId: id });
+    res.json(response);
+  } catch (error) {
+    console.log("Error while delete task: ", error);
+  }
+};
+
+const deleteAllTask = async (req, res) => {
+  const response = await task.deleteMany();
+  res.json(response);
+};
+
+module.exports = { getAllTask, addTask, updateTask, deleteTask, deleteAllTask };

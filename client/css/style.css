@@ -595,7 +595,7 @@ input[type="text"]:focus {
   border-color: transparent;
   border: 1px solid #000000;
   color: #000000 !important;
-  /* sanimation: jelly-42 0.6s ease; */
+  animation: jelly-42 0.6s ease;
 }
 
 .taskDoneAnimation {

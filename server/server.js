@@ -3,7 +3,6 @@ const port = process.env.port;
 const path = require("path");
 const mongoose = require("mongoose");
 const express = require("express");
-const ejs = require("ejs");
 const app = express();
 const routes = require(path.join(__dirname, "routes", "taskRouter"));
 
@@ -28,7 +27,6 @@ DbConnect();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..")));
 app.get("/", (req, res) => {
-  app.use("/api", routes);
   res.sendFile(path.join(__dirname, "..", "client", "public", "index.html"));
 });
-// app.use("/api", routes);
+app.use("/api", routes);
