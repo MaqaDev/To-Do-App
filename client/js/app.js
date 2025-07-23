@@ -30,30 +30,35 @@ function checkTaskStatus(status, taskName) {
 
 // task RENDER to page
 
-function renderTasks() {
-  const savedTasksStr = localStorage.getItem("tasks");
-  const savedTasks = JSON.parse(savedTasksStr);
-  if (!savedTasksStr || savedTasks.length == 0) return;
-  taskList = savedTasks;
-  const allTasks = document.querySelector(".allTasks");
-  savedTasks.forEach((taskdata) => {
-    const taskTemplate = document
-      .querySelector(".taskTemplate")
-      .cloneNode(true);
-    const task = taskTemplate.content.querySelector(".task");
-    const taskDoneInput = task.querySelector(".taskDoneInput");
-    const taskDoneLabel = task.querySelector(".cbx");
-    taskDoneInput.id = taskdata.id;
-    taskDoneInput.checked = taskdata.checkStatus;
-    taskDoneLabel.htmlFor = taskdata.id;
-    task.dataset.id = taskdata.id;
-    const taskName = task.querySelector(".taskName");
-    taskName.textContent = taskdata.taskName;
-    checkTaskStatus(taskDoneInput.checked, taskName);
-    allTasks.appendChild(task);
-  });
+async function renderTask() {
+  try {
+    const response = await fetch("/api/tasks");
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const tasks = await response.json();
+    const allTasks = document.querySelector(".allTasks");
+    tasks.forEach((taskdata) => {
+      const taskTemplate = document
+        .querySelector(".taskTemplate")
+        .cloneNode(true);
+      const task = taskTemplate.content.querySelector(".task");
+      const taskDoneInput = task.querySelector(".taskDoneInput");
+      const taskDoneLabel = task.querySelector(".cbx");
+      taskDoneInput.id = taskdata.taskId;
+      taskDoneInput.checked = taskdata.checkStatus;
+      taskDoneLabel.htmlFor = taskdata.taskId;
+      task.dataset.id = taskdata.taskId;
+      const taskName = task.querySelector(".taskName");
+      taskName.textContent = taskdata.taskName;
+      checkTaskStatus(taskDoneInput.checked, taskName);
+      allTasks.appendChild(task);
+    });
+  } catch (error) {
+    console.log("Error while render task: ", error);
+  }
 }
-renderTasks();
+renderTask();
 
 // Serch Button Click Animation
 const body = document.getElementById("body");
@@ -148,9 +153,7 @@ allTasks.addEventListener("click", (event) => {
   if (event.target.classList.contains("trashCan")) {
     const task = event.target.closest(".task");
     const removeElement = findTaskFromSave(task);
-
     let index = taskList.indexOf(removeElement);
-    console.log(taskList[index].taskName);
     taskList.splice(index, 1);
     saveToLocal();
     task.remove();
@@ -171,22 +174,34 @@ allTasks.addEventListener("click", (event) => {
 });
 
 // task edit CONFIRM event listener
-allTasks.addEventListener("click", (event) => {
-  if (event.target.classList.contains("fa-check")) {
-    const task = event.target.closest(".task");
-    const taskName = task.querySelector(".taskName");
-    const taskEditContent = task.querySelector(".taskEditContent");
-    const taskEditInputBar = task.querySelector(".taskEditInputBar");
-    taskName.textContent = taskEditInputBar.value;
+allTasks.addEventListener("click", editTaskConfirm);
 
-    const editedTask = findTaskFromSave(task);
-    let index = taskList.indexOf(editedTask);
-    console.log(taskList[index]);
-    taskList[index].taskName = taskEditInputBar.value;
-    saveToLocal();
-    taskEditContent.style.display = "none";
+async function editTaskConfirm(event) {
+  event.preventDefault();
+  try {
+    if (event.target.classList.contains("fa-check")) {
+      const task = event.target.closest(".task");
+      const taskName = task.querySelector(".taskName");
+      const taskEditContent = task.querySelector(".taskEditContent");
+      const taskEditInputBar = task.querySelector(".taskEditInputBar");
+      taskName.textContent = taskEditInputBar.value;
+      const reqObj = {
+        taskName: taskEditInputBar.value,
+      };
+      const id = task.dataset.id;
+      const response = await fetch(`/api/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqObj),
+      });
+      if (response.ok) {
+        taskEditContent.style.display = "none";
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
-});
+}
 allTasks.addEventListener("keydown", (event) => {
   if (
     event.target.classList.contains("taskEditInputBar") &&
