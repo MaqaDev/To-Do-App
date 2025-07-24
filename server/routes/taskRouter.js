@@ -1,11 +1,6 @@
 const express = require("express");
 const path = require("path");
-const controllerPath = path.join(
-  __dirname,
-  "..",
-  "controllers",
-  "taskController"
-);
+const controllerPath = path.join(__dirname, "..", "api", "taskController");
 const {
   getAllTask,
   addTask,
