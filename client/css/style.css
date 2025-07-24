@@ -586,7 +586,7 @@ input[type="text"]:focus {
   transition: all 0.3s ease;
   transition-delay: 0.15s;
 }
-.checkbox-wrapper-42 .lbl {
+.checkbox-wrapper-42 {
   margin-left: 5px;
   vertical-align: middle;
   cursor: pointer;

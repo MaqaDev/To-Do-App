@@ -65,8 +65,14 @@ searchIcon.addEventListener("click", () => {
 });
 
 function searchRequire(event) {
-  if (taskSearchBar.classList.contains("taskSearchBarAnimation")) {
-    console.log(event.target);
+  console.log(!event.target.classList.contains("taskSearchBarInput"));
+  if (!event.target.classList.contains("taskSearchBarInput")) {
+    const taskSearchBarInput = document.querySelector(".taskSearchBarInput");
+    taskSearchBarInput.value = "";
+    const tasks = document.querySelectorAll(".task");
+    tasks.forEach((task) => {
+      task.style.display = "flex";
+    });
     taskMainHeaderText.style.display = "block";
     searchIcon.style.display = "block";
     taskSearchBar.classList.remove("taskSearchBarAnimation");
@@ -225,13 +231,14 @@ allTasks.addEventListener("keydown", (event) => {
 
 // task CHECKBOX event listener
 allTasks.addEventListener("click", async (event) => {
-  if (event.target.classList.contains("taskDoneInput")) {
+  if (event.target.classList.contains("cbx")) {
     const task = event.target.closest(".task");
     const taskName = task.querySelector(".taskName");
     const checkBox = task.querySelector(".taskDoneInput");
     const checkIcon = task.querySelector(".cbx");
     const editPen = task.querySelector(".editPen");
-    const checkStatus = false;
+    let checkStatus = !checkBox.checked;
+    const id = task.dataset.id;
     resObj = {
       Completed: checkStatus,
     };
@@ -240,23 +247,25 @@ allTasks.addEventListener("click", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(resObj),
     };
-    if (checkBox.checked) {
-      findTaskFromSave(task).checkStatus = true;
+    if (checkStatus) {
+      checkBox.checked = true;
       checkStatus = true;
-      const id = task.dataset.id;
-      await fetch(`/api/tasks/${id}`, request);
       taskName.classList.add("taskDoneLine");
       editPen.classList.add("editPenAnimation");
       checkIcon.classList.add("taskDoneAnimation");
     } else {
+      checkBox.checked = false;
       checkStatus = false;
-      await fetch(`/api/tasks/${id}`, request);
+      // const response = await fetch(`/api/tasks/${id}`, request);
       taskName.style.textDecoration = "";
       taskName.classList.remove("taskDoneLine");
       editPen.classList.remove("editPenAnimation");
       checkIcon.classList.remove("taskDoneAnimation");
     }
-    saveToLocal();
+    const response = await fetch(`/api/tasks/${id}`, request);
+    if (!response.ok) {
+      console.log(response.status);
+    }
   }
 });
 
