@@ -115,7 +115,8 @@ const addTask = async function (event) {
       allTasks.append(task);
       task.querySelector(".taskName").textContent = addTaskInputBar.value;
       const taskName = addTaskInputBar.value;
-      const taskId = 201;
+      const taskId = Date.now() + Math.floor(Math.random());
+      console.log(taskId);
       task.dataset.id = taskId;
       const taskObj = {
         taskId: taskId,
